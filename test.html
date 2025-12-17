@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Link Monetizer - Unlock Exclusive Content</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 900px;
+            width: 90%;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            margin: 20px;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            color: #1a73e8;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        p {
+            font-size: 1em;
+            margin-bottom: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+        .post-example {
+            background: #e8f0fe;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #d1e3ff;
+            text-align: left;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .post-example h2 {
+            font-size: 1.6em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .post-example strong {
+            color: #1a73e8;
+        }
+        button {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #0d47a1, #1a73e8);
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(26, 115, 232, 0.4);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        button i {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+        /* Guide Section */
+        .guide-section {
+            background: #fffaf0;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #ffe4b5;
+            text-align: left;
+        }
+        .guide-section h3 {
+            font-size: 1.4em;
+            color: #d2691e;
+            margin-bottom: 15px;
+        }
+        .guide-section ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        .guide-section li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .guide-section .tips {
+            font-style: italic;
+            color: #666;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 800px;
+            height: 85vh;
+            position: relative;
+            overflow: hidden;
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.2s;
+        }
+        .close:hover {
+            color: #333;
+            transform: rotate(90deg);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none; /* Hidden until loaded */
+        }
+        /* Loading Spinner */
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #1a73e8;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        /* Enhanced Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                width: 95%;
+                margin: 10px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            p {
+                font-size: 0.95em;
+            }
+            .post-example {
+                padding: 12px;
+            }
+            .post-example h2 {
+                font-size: 1.4em;
+            }
+            button {
+                padding: 10px 25px;
+                font-size: 1em;
+                width: 100%;
+            }
+            .guide-section {
+                padding: 15px;
+            }
+            .guide-section h3 {
+                font-size: 1.3em;
+            }
+            .modal-content {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+            .modal {
+                padding: 0;
+            }
+            .close {
+                font-size: 32px;
+                top: 15px;
+                right: 15px;
+            }
+            .loader {
+                width: 40px;
+                height: 40px;
+                border-width: 5px;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6em;
+            }
+            button {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+    <!-- Font Awesome for icons (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to My Link Monetizer</h1>
+        <p>Shorten and monetize your links with ease. Unlock exclusive content by completing a quick offer!</p>
+        
+        <!-- Example Post Section -->
+        <div class="post-example">
+            <h2>Example Post: Download Premium Software</h2>
+            <p>This is a teaser for an awesome download. To access the full link, complete a quick offer below.</p>
+            <p><strong>Features:</strong> Fast downloads, no ads after unlock, secure files.</p>
+        </div>
+        
+        <!-- Detailed Guide Section -->
+        <div class="guide-section">
+            <h3>Detailed Guide on Content Lockers: How to Unlock</h3>
+            <p>Content lockers are a way to access premium content by completing simple offers. This one is legitimate and not fake—unlike many scamming YouTubers who misuse content lockers to trick users without delivering value. Here, upon successful completion, you'll genuinely unlock the content. Here's a step-by-step guide on how to unlock them:</p>
+            <ol>
+                <li><strong>Open the Locker:</strong> Click the "Unlock Content" button below to load the content locker in a modal window. It will appear as an overlay on this page for easy access.</li>
+                <li><strong>Choose an Offer:</strong> Browse the list of available offers, which may include surveys, app installations, email sign-ups, trial subscriptions, or simple verification tasks. Offers are tailored based on your location, device, and availability—select one that seems straightforward and matches your interests.</li>
+                <li><strong>Complete the Offer:</strong> Carefully follow the instructions provided. For surveys, answer questions honestly; for app downloads, install and open the app as required (you can uninstall later); for sign-ups, use a valid email. Some offers may require a small action like watching a short video or entering basic info.</li>
+                <li><strong>Verification Process:</strong> After finishing, the system will automatically check your completion. This is usually quick (seconds to minutes), but if it takes longer, wait patiently. Use real information to ensure verification succeeds—fake details often lead to failure.</li>
+                <li><strong>Access the Unlocked Content:</strong> Once verified, you'll be redirected automatically to the premium content, such as the full download link, exclusive file, or hidden section. If it doesn't redirect, refresh the page or try again.</li>
+            </ol>
+            <p class="tips"><strong>Tips for Success:</strong> Use a stable internet connection and your actual device for higher completion rates. If one offer doesn't work or seems too complex, switch to another. Avoid VPNs, as they can interfere with geo-targeted offers. This process supports content creators via affiliate partnerships, ensuring the site remains free and ad-light. Remember, legitimate lockers like this one deliver on their promise, unlike scams that never unlock anything.</p>
+            <p>For more general tips on content lockers, search for beginner tutorials on reliable platforms like YouTube or affiliate marketing forums.</p>
+        </div>
+        
+        <!-- Button to Open Modal with Iframe -->
+        <button onclick="openModal()"><i class="fas fa-lock-open"></i> Unlock Content</button>
+    </div>
+
+    <!-- Modal with Iframe and Loader -->
+    <div id="lockerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="loader" id="loader"></div>
+            <iframe id="lockerIframe" src="https://omnioffers.com/1861737" frameborder="0" onload="hideLoader()"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('lockerModal').style.display = 'flex';
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('lockerIframe').style.display = 'none';
+        }
+        function closeModal() {
+            document.getElementById('lockerModal').style.display = 'none';
+        }
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('lockerIframe').style.display = 'block';
+        }
+        // Close modal if clicking outside the content
+        window.onclick = function(event) {
+            const modal = document.getElementById('lockerModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
