@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>apknx — Premium Scripts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #00e5ff;
+    --accent2: #ff3cac;
+    --accent3: #7b61ff;
+    --text: #e8e8f0;
+    --muted: #6a6a80;
+    --success: #00ff88;
+    --warning: #ffbb00;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 20% 20%, rgba(0,229,255,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(255,60,172,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 10%, rgba(123,97,255,0.04) 0%, transparent 40%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .logo span {
+    color: var(--accent);
+  }
+
+  .logo-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-left: 4px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(0,229,255,0.4); }
+    50% { opacity: 0.8; transform: scale(1.1); box-shadow: 0 0 0 6px rgba(0,229,255,0); }
+  }
+
+  .header-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  /* ── AD BANNER TOP ── */
+  .ad-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ad-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,229,255,0.03), transparent);
+  }
+
+  .ad-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  .ad-text {
+    font-size: 0.85rem;
+    color: var(--muted);
+    flex: 1;
+    text-align: center;
+  }
+
+  .ad-text strong { color: var(--accent); }
+
+  /* ── PASTE TITLE ── */
+  .paste-meta {
+    margin-bottom: 24px;
+  }
+
+  .paste-category {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .paste-category::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .paste-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, var(--text) 0%, rgba(232,232,240,0.6) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .paste-stats {
+    display: flex;
+    gap: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  .stat { display: flex; align-items: center; gap: 5px; }
+  .stat-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); }
+
+  /* ── VIDEO CONTAINER ── */
+  .video-section {
+    margin-bottom: 28px;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .video-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .video-glow {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 40px;
+    background: var(--accent3);
+    filter: blur(30px);
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  /* ── DESCRIPTION ── */
+  .description {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-bottom: 28px;
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: rgba(232,232,240,0.75);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .description::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--accent), var(--accent3));
+    border-radius: 3px 0 0 3px;
+  }
+
+  /* ── SCRIPT UNLOCK BOX ── */
+  .unlock-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .unlock-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, rgba(123,97,255,0.04) 100%);
+    pointer-events: none;
+  }
+
+  .unlock-box-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .lock-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .unlock-box-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 22px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .steps {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .step {
+    flex: 1;
+    min-width: 160px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    position: relative;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+
+  .step.active {
+    border-color: var(--accent);
+    color: var(--text);
+    box-shadow: 0 0 20px rgba(0,229,255,0.08);
+  }
+
+  .step.done {
+    border-color: var(--success);
+    color: var(--success);
+  }
+
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    background: var(--border);
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+
+  .step.active .step-num { background: var(--accent); color: var(--bg); }
+  .step.done .step-num { background: var(--success); color: var(--bg); }
+
+  .btn-get {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent3) 100%);
+    border: none;
+    border-radius: 8px;
+    color: var(--bg);
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .btn-get:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(0,229,255,0.25);
+  }
+
+  .btn-get:active { transform: translateY(0); }
+
+  .btn-get::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+
+  .btn-get:hover::after { transform: translateX(100%); }
+
+  /* ── TIMER OVERLAY ── */
+  .timer-bar {
+    display: none;
+    background: var(--surface2);
+    border: 1px solid var(--warning);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-top: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timer-bar.visible { display: block; animation: slideIn 0.4s ease; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .timer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .timer-msg {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--warning);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .timer-msg::before {
+    content: '⚡';
+  }
+
+  .timer-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--warning);
+    min-width: 50px;
+    text-align: right;
+  }
+
+  .timer-progress-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .timer-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--warning), var(--accent2));
+    border-radius: 2px;
+    transition: width 1s linear;
+    width: 100%;
+  }
+
+  .timer-hint {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    text-align: center;
+  }
+
+  .timer-hint strong { color: var(--warning); }
+
+  /* ── AD SIDEBAR AREA ── */
+  .ad-sidebar {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 28px;
+    text-align: center;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+  }
+
+  .ad-sidebar .ad-label { margin-bottom: 4px; }
+  .ad-placeholder { font-size: 0.8rem; color: var(--muted); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 36px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes modalPop {
+    from { opacity: 0; transform: scale(0.85) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--success), var(--accent), var(--accent3));
+  }
+
+  .modal-glow {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 120px;
+    background: var(--success);
+    filter: blur(60px);
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .modal-icon {
+    width: 70px; height: 70px;
+    background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,229,255,0.1));
+    border: 1px solid rgba(0,255,136,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 20px;
+    animation: iconBounce 0.6s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  @keyframes iconBounce {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    color: var(--success);
+  }
+
+  .modal-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+    font-family: 'Space Mono', monospace;
+    line-height: 1.6;
+  }
+
+  .btn-claim {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, var(--success), #00c8ff);
+    border: none;
+    border-radius: 8px;
+    color: var(--bg);
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    text-decoration: none;
+    animation: buttonPulse 2s infinite;
+  }
+
+  @keyframes buttonPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(0,255,136,0); }
+  }
+
+  .btn-claim:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 14px; right: 16px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--text); }
+
+  /* Ticker shimmer for ads */
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">apk<span>nx</span><span class="logo-dot"></span></div>
+    <div class="header-tag">PREMIUM // FREE</div>
+  </header>
+
+  <!-- TOP AD BANNER -->
+  <div class="ad-banner">
+    <span class="ad-label">Advertisement</span>
+    <span class="ad-text">Support us by disabling your adblocker — it keeps these scripts <strong>free</strong></span>
+    <span class="ad-label">AD</span>
+  </div>
+
+  <!-- PASTE TITLE & META -->
+  <div class="paste-meta">
+    <div class="paste-category">Roblox Script</div>
+    <h1 class="paste-title">🔥 [Bee swarm simulator script Atlas Hub]</h1>
+    <div class="paste-stats">
+      <div class="stat"><span class="stat-dot"></span> Posted 2 hours ago</div>
+      <div class="stat"><span class="stat-dot"></span> 1,284 views</div>
+      <div class="stat"><span class="stat-dot"></span> Keyless</div>
+    </div>
+  </div>
+
+  <!-- VIDEO SECTION -->
+  <div class="video-section">
+    <div class="section-label">Script Preview / Tutorial</div>
+    <div style="position:relative;">
+      <div class="video-wrapper">
+        <!-- Replace YOUR_VIDEO_ID with your actual YouTube video ID -->
+        <iframe 
+          src="https://www.youtube.com/watch?v=7pwNCJ3iqI8?rel=0&modestbranding=1"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <div class="video-glow"></div>
+    </div>
+  </div>
+
+  <!-- AD BETWEEN VIDEO AND DESCRIPTION -->
+  <div class="ad-sidebar">
+    <span class="ad-label">Advertisement</span>
+    <span class="ad-placeholder">Your ad will display here — great exposure!</span>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <div class="section-label">About This Script</div>
+  <div class="description">
+    This script provides an insane advantage in-game with fully automated features, anti-ban protection, and a clean GUI. 
+    Works on all major executors. Updated regularly with the latest patches. Click <strong>Get Script</strong> below to unlock the full version — completely free!
+    <br><br>
+    <strong>Features:</strong> Auto Farm · God Mode · Speed Hack · ESP · No Clip · Aimbot · Teleport · and more coming soon...
+  </div>
+
+  <!-- UNLOCK BOX -->
+  <div class="unlock-box">
+    <div class="unlock-box-title">
+      <div class="lock-icon">🔒</div>
+      Script is Locked
+    </div>
+    <div class="unlock-box-sub">// Complete the steps below to unlock instant access</div>
+
+    <div class="steps">
+      <div class="step active" id="step1">
+        <div class="step-num">1</div>
+        <div>Click <strong>Get Script</strong> and complete the page</div>
+      </div>
+      <div class="step" id="step2">
+        <div class="step-num">2</div>
+        <div>Return here &amp; wait for the timer</div>
+      </div>
+      <div class="step" id="step3">
+        <div class="step-num">3</div>
+        <div>Claim your script instantly!</div>
+      </div>
+    </div>
+
+    <button class="btn-get" id="btnGet" onclick="handleGetScript()">
+      <span>🚀</span> Get Script
+    </button>
+
+    <!-- TIMER SECTION (hidden initially) -->
+    <div class="timer-bar" id="timerBar">
+      <div class="timer-header">
+        <div class="timer-msg">Verifying... Please interact with the ads on the previous page</div>
+        <div class="timer-count" id="timerCount">10s</div>
+      </div>
+      <div class="timer-progress-track">
+        <div class="timer-progress-fill" id="timerFill"></div>
+      </div>
+      <div class="timer-hint"><strong>⚠ Do NOT close this tab</strong> — your unlock is being processed</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM AD -->
+  <div class="ad-sidebar" style="min-height: 120px;">
+    <span class="ad-label">Advertisement</span>
+    <span class="ad-placeholder">728×90 Banner Ad Space</span>
+  </div>
+
+
+</div>
+
+<!-- UNLOCK MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-glow"></div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-icon">🔓</div>
+    <div class="modal-title">Script Unlocked!</div>
+    <div class="modal-sub">
+      Your access has been verified.<br>
+      Click below to get redirected to your script.
+    </div>
+    <!-- Replace YOUR_CONTENT_LOCKER_URL with your actual link -->
+    <a class="btn-claim" href="https://rapid-links.com/s?0xw7UZIW" target="_blank">
+      ⚡ Claim Script Now
+    </a>
+  </div>
+</div>
+
+<script>
+  const SMARTLINK_URL = 'https://mploejuiashsatea.com?aPq5S=1244427'; // ← Replace with your AdMaven smartlink
+  const TIMER_SECONDS = 10;
+
+  let timerActive = false;
+
+  function handleGetScript() {
+    // Open AdMaven smartlink in new tab
+    window.open(SMARTLINK_URL, '_blank');
+
+    // Start watching for user returning to this tab
+    document.addEventListener('visibilitychange', onReturnToTab, { once: true });
+  }
+
+  function onReturnToTab() {
+    if (document.visibilityState === 'visible' && !timerActive) {
+      startTimer();
+    }
+  }
+
+  function startTimer() {
+    timerActive = true;
+
+    // Update steps UI
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step1').classList.add('done');
+    document.getElementById('step1').querySelector('.step-num').textContent = '✓';
+    document.getElementById('step2').classList.add('active');
+
+    // Show timer
+    const timerBar = document.getElementById('timerBar');
+    timerBar.classList.add('visible');
+
+    // Disable button
+    const btn = document.getElementById('btnGet');
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.style.cursor = 'not-allowed';
+    btn.innerHTML = '⏳ Verifying...';
+
+    let remaining = TIMER_SECONDS;
+    const fill = document.getElementById('timerFill');
+    const countEl = document.getElementById('timerCount');
+
+    // Initial state
+    fill.style.width = '100%';
+    countEl.textContent = remaining + 's';
+
+    const interval = setInterval(() => {
+      remaining--;
+      const pct = (remaining / TIMER_SECONDS) * 100;
+      fill.style.width = pct + '%';
+      countEl.textContent = remaining + 's';
+
+      if (remaining <= 3) {
+        countEl.style.color = '#ff3cac';
+        fill.style.background = 'linear-gradient(90deg, #ff3cac, #ff3cac)';
+      }
+
+      if (remaining <= 0) {
+        clearInterval(interval);
+        onTimerEnd();
+      }
+    }, 1000);
+  }
+
+  function onTimerEnd() {
+    // Update steps
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('step2').classList.add('done');
+    document.getElementById('step2').querySelector('.step-num').textContent = '✓';
+    document.getElementById('step3').classList.add('active');
+
+    // Hide timer
+    document.getElementById('timerBar').style.display = 'none';
+
+    // Show modal after short delay
+    setTimeout(() => {
+      document.getElementById('modalOverlay').classList.add('open');
+    }, 300);
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  // Close modal on overlay click
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+
+</body>
+</html>
