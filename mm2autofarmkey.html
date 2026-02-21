@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MM2 AutoFarm v4 — Get Your Key</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  /* ── Reset & Base ──────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080b10;
+    --bg2:       #0d1117;
+    --bg3:       #111820;
+    --border:    #1e2d3d;
+    --border2:   #243447;
+    --accent:    #00d4ff;
+    --accent2:   #0099cc;
+    --gold:      #f5a623;
+    --gold2:     #c47d0e;
+    --red:       #ff4545;
+    --green:     #00e676;
+    --green2:    #00b35a;
+    --text:      #c8d8e8;
+    --text-dim:  #5a7a99;
+    --text-muted:#3a5a77;
+    --glow:      0 0 20px rgba(0,212,255,0.25);
+    --glow-gold: 0 0 20px rgba(245,166,35,0.3);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Animated grid background ──────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Particles ─────────────────────────────────────────── */
+  #particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatUp var(--dur, 8s) var(--delay, 0s) infinite ease-in;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-10vh) translateX(var(--drift, 30px)); opacity: 0; }
+  }
+
+  /* ── Layout ────────────────────────────────────────────── */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 20px 80px;
+  }
+
+  /* ── Header ────────────────────────────────────────────── */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeDown 0.7s ease both;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 4px;
+    padding: 4px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .header-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .header h1 {
+    font-size: clamp(28px, 6vw, 44px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .header h1 span {
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(0,212,255,0.5);
+  }
+  .header p {
+    margin-top: 12px;
+    color: var(--text-dim);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Progress bar ──────────────────────────────────────── */
+  .progress-wrap {
+    margin-bottom: 36px;
+    animation: fadeDown 0.7s 0.15s ease both;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .progress-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .progress-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(0,212,255,0.4);
+    width: 0%;
+  }
+
+  /* ── Step dots ─────────────────────────────────────────── */
+  .step-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 36px;
+    animation: fadeDown 0.7s 0.2s ease both;
+  }
+  .step-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--border2);
+    background: var(--bg2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    transition: all 0.4s ease;
+    position: relative;
+  }
+  .step-dot.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 12px rgba(0,212,255,0.3);
+  }
+  .step-dot.done {
+    border-color: var(--green);
+    background: rgba(0,230,118,0.1);
+    color: var(--green);
+  }
+  .step-dot.done::after {
+    content: '✓';
+    font-size: 13px;
+    font-family: sans-serif;
+  }
+  .step-dot.done span { display: none; }
+
+  /* ── Step connector lines ───────────────────────────────── */
+  .step-dots-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 36px;
+    animation: fadeDown 0.7s 0.2s ease both;
+  }
+  .dot-connector {
+    width: 32px;
+    height: 2px;
+    background: var(--border);
+    transition: background 0.4s ease;
+  }
+  .dot-connector.done { background: var(--green); }
+
+  /* ── Step card ─────────────────────────────────────────── */
+  .step-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s, opacity 0.4s, transform 0.4s;
+    animation: fadeUp 0.5s ease both;
+  }
+  .step-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .step-card.active { border-color: var(--border2); }
+  .step-card.active::before { opacity: 1; }
+  .step-card.locked {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .step-card.completed {
+    border-color: rgba(0,230,118,0.2);
+    background: rgba(0,230,118,0.03);
+  }
+  .step-card.completed::before {
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity: 0.6;
+  }
+
+  .step-card.ad-step { border-color: rgba(245,166,35,0.2); }
+  .step-card.ad-step.active { border-color: rgba(245,166,35,0.4); }
+  .step-card.ad-step::before {
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .step-card.ad-step.completed {
+    border-color: rgba(0,230,118,0.2);
+    background: rgba(0,230,118,0.03);
+  }
+  .step-card.ad-step.completed::before {
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity: 0.6;
+  }
+
+  .step-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: all 0.4s;
+  }
+  .step-card.completed .step-num {
+    background: rgba(0,230,118,0.1);
+    border-color: rgba(0,230,118,0.3);
+    color: var(--green);
+  }
+  .ad-step .step-num {
+    background: rgba(245,166,35,0.08);
+    border-color: rgba(245,166,35,0.25);
+    color: var(--gold);
+  }
+  .ad-step.completed .step-num {
+    background: rgba(0,230,118,0.1);
+    border-color: rgba(0,230,118,0.3);
+    color: var(--green);
+  }
+
+  .step-info { flex: 1; }
+  .step-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #e8f4ff;
+    line-height: 1.2;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 3px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .step-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 3px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .badge-yt   { color: #ff4444; border-color: rgba(255,68,68,0.3); background: rgba(255,68,68,0.06); }
+  .badge-ad   { color: var(--gold); border-color: rgba(245,166,35,0.3); background: rgba(245,166,35,0.06); }
+  .badge-done { color: var(--green); border-color: rgba(0,230,118,0.3); background: rgba(0,230,118,0.06); }
+
+  /* ── Completed checkmark overlay ──────────────────────── */
+  .step-done-bar {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .step-done-bar .check-icon {
+    width: 22px; height: 22px;
+    background: rgba(0,230,118,0.15);
+    border: 1px solid rgba(0,230,118,0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .step-card.completed .step-done-bar { display: flex; }
+  .step-card.completed .step-btn-wrap  { display: none; }
+
+  /* ── Action button ─────────────────────────────────────── */
+  .step-btn-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .step-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 24px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,212,255,0.3);
+    background: rgba(0,212,255,0.08);
+    color: var(--accent);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+  }
+  .step-btn:hover {
+    background: rgba(0,212,255,0.15);
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+    transform: translateY(-1px);
+  }
+  .step-btn:active { transform: translateY(0); }
+
+  .step-btn.gold-btn {
+    border-color: rgba(245,166,35,0.35);
+    background: rgba(245,166,35,0.08);
+    color: var(--gold);
+  }
+  .step-btn.gold-btn:hover {
+    background: rgba(245,166,35,0.15);
+    border-color: var(--gold);
+    box-shadow: var(--glow-gold);
+  }
+
+  .step-btn.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+  /* Shimmer on btn */
+  .step-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    transition: left 0.5s ease;
+  }
+  .step-btn:hover::after { left: 150%; }
+
+  /* ── Countdown timer ───────────────────────────────────── */
+  .countdown-wrap {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .countdown-wrap.visible { display: flex; }
+  .countdown-num {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 14px;
+    min-width: 18px;
+    text-align: center;
+  }
+  .countdown-bar-wrap {
+    width: 80px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .countdown-bar {
+    height: 100%;
+    background: var(--accent);
+    width: 100%;
+    border-radius: 2px;
+    transition: width 1s linear;
+  }
+
+  /* ── Key reveal section ────────────────────────────────── */
+  .key-section {
+    display: none;
+    margin-top: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .key-section.visible { display: block; }
+
+  .key-card {
+    background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(0,153,204,0.03));
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .key-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .key-header {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+  .key-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .key-display {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(13px, 3vw, 17px);
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+    word-break: break-all;
+    text-shadow: 0 0 20px rgba(0,212,255,0.4);
+  }
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 28px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,212,255,0.35);
+    background: rgba(0,212,255,0.1);
+    color: var(--accent);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .copy-btn:hover {
+    background: rgba(0,212,255,0.18);
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+  }
+  .copy-btn.copied {
+    border-color: rgba(0,230,118,0.4);
+    background: rgba(0,230,118,0.1);
+    color: var(--green);
+  }
+  .key-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Animations ────────────────────────────────────────── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Footer ────────────────────────────────────────────── */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .footer a { color: var(--text-dim); text-decoration: none; }
+  .footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- Particles -->
+<div id="particles"></div>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">MM2 AutoFarm v4</div>
+    <h1>Get Your <span>Script Key</span></h1>
+    <p>Complete all 5 steps below to unlock your key for free.</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-header">
+      <span class="progress-label">Progress</span>
+      <span class="progress-count" id="progressCount">0 / 5 completed</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- Step dots -->
+  <div class="step-dots-wrap" id="stepDots"></div>
+
+  <!-- Steps container -->
+  <div id="stepsContainer"></div>
+
+  <!-- Key reveal -->
+  <div class="key-section" id="keySection">
+    <div class="key-card">
+      <div class="key-header">🔑 &nbsp;Key Unlocked — All steps complete</div>
+      <div class="key-label">Your Script Key</div>
+      <div class="key-display" id="keyDisplay">mm2autofarm2314434</div>
+      <button class="copy-btn" id="copyBtn" onclick="copyKey()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Key
+      </button>
+      <div class="key-note">Paste this key into the script's key input box.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    MM2 AutoFarm v4 &nbsp;·&nbsp; <a href="#">Discord</a> &nbsp;·&nbsp; All steps required
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// CONFIG — fill in your URLs here
+// ══════════════════════════════════════════════════
+const CONFIG = {
+  key:          'mm2autofarm2314434',
+  channelUrl:   'YOUR_YOUTUBE_CHANNEL_URL_HERE',   // e.g. https://youtube.com/@YourChannel
+  videoUrl:     'YOUR_YOUTUBE_VIDEO_URL_HERE',      // e.g. https://youtu.be/XXXXXXXXX
+  smartlink:    'https://mploejuiashsatea.com?aPq5S=1244427',
+  cooldown:     5,   // seconds to wait after each step before unlocking next
+};
+
+// ══════════════════════════════════════════════════
+// STEP DEFINITIONS
+// ══════════════════════════════════════════════════
+const STEPS = [
+  {
+    id:      'subscribe',
+    title:   'Subscribe to Channel',
+    desc:    'Subscribe to our YouTube channel to stay updated',
+    badge:   '<span class="step-badge badge-yt">YouTube</span>',
+    btnText: '▶  Open & Subscribe',
+    btnClass:'step-btn',
+    isAd:    false,
+    action:  () => window.open(CONFIG.channelUrl, '_blank'),
+  },
+  {
+    id:      'comment',
+    title:   'Like & Comment on Video',
+    desc:    'Like and leave a comment on our latest video',
+    badge:   '<span class="step-badge badge-yt">YouTube</span>',
+    btnText: '▶  Open Video',
+    btnClass:'step-btn',
+    isAd:    false,
+    action:  () => window.open(CONFIG.videoUrl, '_blank'),
+  },
+  {
+    id:      'sponsor1',
+    title:   'Support via Sponsor Link',
+    desc:    'Click through our sponsor — supports free script development',
+    badge:   '<span class="step-badge badge-ad">Sponsor</span>',
+    btnText: '★  Visit Sponsor',
+    btnClass:'step-btn gold-btn',
+    isAd:    true,
+    action:  () => window.open(CONFIG.smartlink, '_blank'),
+  },
+  {
+    id:      'sponsor2',
+    title:   'One More Sponsor Visit',
+    desc:    'One final sponsor click keeps the script free and updated',
+    badge:   '<span class="step-badge badge-ad">Sponsor</span>',
+    btnText: '★  Visit Sponsor',
+    btnClass:'step-btn gold-btn',
+    isAd:    true,
+    action:  () => window.open(CONFIG.smartlink, '_blank'),
+  },
+  {
+    id:      'confirm',
+    title:   'Confirm & Get Key',
+    desc:    'All steps done! Click below to reveal your key',
+    badge:   '<span class="step-badge badge-yt">Final Step</span>',
+    btnText: '🔑  Reveal My Key',
+    btnClass:'step-btn',
+    isAd:    false,
+    action:  () => {},
+  },
+];
+
+// ══════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════
+let completed   = [];
+let inCooldown  = false;
+
+// ══════════════════════════════════════════════════
+// BUILD UI
+// ══════════════════════════════════════════════════
+function buildDots() {
+  const wrap = document.getElementById('stepDots');
+  wrap.innerHTML = '';
+  STEPS.forEach((step, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'step-dot';
+    dot.id = `dot-${i}`;
+    dot.innerHTML = `<span>${i + 1}</span>`;
+    wrap.appendChild(dot);
+    if (i < STEPS.length - 1) {
+      const line = document.createElement('div');
+      line.className = 'dot-connector';
+      line.id = `connector-${i}`;
+      wrap.appendChild(line);
+    }
+  });
+}
+
+function buildSteps() {
+  const container = document.getElementById('stepsContainer');
+  container.innerHTML = '';
+  STEPS.forEach((step, i) => {
+    const card = document.createElement('div');
+    card.className = `step-card ${step.isAd ? 'ad-step' : ''} ${i === 0 ? 'active' : 'locked'}`;
+    card.id = `card-${i}`;
+    card.style.animationDelay = `${i * 0.08}s`;
+
+    card.innerHTML = `
+      <div class="step-meta">
+        <div class="step-num" id="stepnum-${i}">${i + 1}</div>
+        <div class="step-info">
+          <div class="step-title">${step.title}</div>
+          <div class="step-desc">${step.desc}</div>
+        </div>
+        ${step.badge}
+      </div>
+      <div class="step-btn-wrap" id="btnwrap-${i}">
+        <button class="step-btn ${step.isAd ? 'gold-btn' : ''} ${i !== 0 ? 'disabled' : ''}"
+                id="btn-${i}"
+                onclick="handleStep(${i})">
+          ${step.btnText}
+        </button>
+        <div class="countdown-wrap" id="countdown-${i}">
+          <span>Unlocking next in</span>
+          <span class="countdown-num" id="cdnum-${i}">5</span>
+          <div class="countdown-bar-wrap">
+            <div class="countdown-bar" id="cdbar-${i}"></div>
+          </div>
+        </div>
+      </div>
+      <div class="step-done-bar">
+        <div class="check-icon">✓</div>
+        Step completed
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// STEP HANDLER
+// ══════════════════════════════════════════════════
+function handleStep(idx) {
+  if (inCooldown) return;
+  if (completed.includes(idx)) return;
+
+  const step = STEPS[idx];
+  step.action();
+
+  // Last step = just reveal key immediately
+  if (idx === STEPS.length - 1) {
+    markComplete(idx);
+    return;
+  }
+
+  // Start cooldown
+  inCooldown = true;
+  const btn        = document.getElementById(`btn-${idx}`);
+  const cdWrap     = document.getElementById(`countdown-${idx}`);
+  const cdNum      = document.getElementById(`cdnum-${idx}`);
+  const cdBar      = document.getElementById(`cdbar-${idx}`);
+  btn.classList.add('disabled');
+  btn.textContent = '⏳  Opened...';
+  cdWrap.classList.add('visible');
+
+  let remaining = CONFIG.cooldown;
+  cdNum.textContent = remaining;
+
+  // Animate bar
+  requestAnimationFrame(() => {
+    cdBar.style.width = '0%';
+  });
+
+  const interval = setInterval(() => {
+    remaining--;
+    cdNum.textContent = remaining;
+    if (remaining <= 0) {
+      clearInterval(interval);
+      cdWrap.classList.remove('visible');
+      inCooldown = false;
+      markComplete(idx);
+    }
+  }, 1000);
+}
+
+// ══════════════════════════════════════════════════
+// MARK COMPLETE & UNLOCK NEXT
+// ══════════════════════════════════════════════════
+function markComplete(idx) {
+  if (completed.includes(idx)) return;
+  completed.push(idx);
+
+  const card = document.getElementById(`card-${idx}`);
+  card.classList.remove('active');
+  card.classList.add('completed');
+
+  const dot = document.getElementById(`dot-${idx}`);
+  dot.className = 'step-dot done';
+
+  if (idx < STEPS.length - 1) {
+    const connector = document.getElementById(`connector-${idx}`);
+    if (connector) connector.classList.add('done');
+  }
+
+  updateProgress();
+
+  // Last step done
+  if (idx === STEPS.length - 1) {
+    revealKey();
+    return;
+  }
+
+  // Unlock next
+  const nextIdx  = idx + 1;
+  const nextCard = document.getElementById(`card-${nextIdx}`);
+  const nextBtn  = document.getElementById(`btn-${nextIdx}`);
+  const nextDot  = document.getElementById(`dot-${nextIdx}`);
+
+  nextCard.classList.remove('locked');
+  nextCard.classList.add('active');
+  nextBtn.classList.remove('disabled');
+  nextDot.classList.add('active');
+
+  // Smooth scroll to next card
+  setTimeout(() => {
+    nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 200);
+}
+
+// ══════════════════════════════════════════════════
+// PROGRESS
+// ══════════════════════════════════════════════════
+function updateProgress() {
+  const pct = (completed.length / STEPS.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent =
+    `${completed.length} / ${STEPS.length} completed`;
+}
+
+// ══════════════════════════════════════════════════
+// KEY REVEAL
+// ══════════════════════════════════════════════════
+function revealKey() {
+  const section = document.getElementById('keySection');
+  section.classList.add('visible');
+  section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // Auto copy
+  try {
+    navigator.clipboard.writeText(CONFIG.key);
+  } catch(e) {
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = CONFIG.key;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+
+  // Brief flash on copy btn to show auto-copied
+  setTimeout(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓  Copied automatically!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Key`;
+      btn.classList.remove('copied');
+    }, 2500);
+  }, 600);
+}
+
+function copyKey() {
+  try { navigator.clipboard.writeText(CONFIG.key); } catch(e) {}
+  const btn = document.getElementById('copyBtn');
+  btn.textContent = '✓  Copied!';
+  btn.classList.add('copied');
+  setTimeout(() => {
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Key`;
+    btn.classList.remove('copied');
+  }, 2000);
+}
+
+// ══════════════════════════════════════════════════
+// PARTICLES
+// ══════════════════════════════════════════════════
+function spawnParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left    = Math.random() * 100 + 'vw';
+    p.style.setProperty('--dur',   (6 + Math.random() * 8) + 's');
+    p.style.setProperty('--delay', (Math.random() * 8) + 's');
+    p.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+    // Some gold particles
+    if (Math.random() > 0.75) p.style.background = 'rgba(245,166,35,0.8)';
+    container.appendChild(p);
+  }
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+buildDots();
+buildSteps();
+spawnParticles();
+document.getElementById('dot-0').classList.add('active');
+</script>
+</body>
+</html>
